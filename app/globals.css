@@ -1,0 +1,79 @@
+/* ===== QUARTAS - MUNDIAL DE CLUBES ===== */
+
+.quartas-page {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #061b2d, #020812);
+  color: white;
+  padding: 40px 20px;
+}
+
+.quartas-title {
+  text-align: center;
+  font-size: 55px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.quartas-subtitle {
+  text-align: center;
+  margin-top: 10px;
+  opacity: 0.7;
+}
+
+.quartas-grid {
+  width: 100%;
+  max-width: 1100px;
+  margin: 50px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+}
+
+.side-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.match-card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.team-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.team-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-logo {
+  width: 32px;
+  height: 32px;
+  background: white;
+  border-radius: 8px;
+  object-fit: contain;
+  padding: 3px;
+}
+
+.score {
+  font-size: 22px;
+  font-weight: 900;
+  color: #00ff99;
+}

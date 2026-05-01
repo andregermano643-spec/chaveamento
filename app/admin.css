@@ -1,0 +1,76 @@
+.admin-container {
+  min-height: 100vh;
+  background: #0b0f1a;
+  color: white;
+  padding: 40px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.admin-title {
+  text-align: center;
+  font-size: 38px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.admin-card {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #111827;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.5);
+}
+
+.admin-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-btn {
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.admin-btn:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+
+.btn-blue {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-purple {
+  background: #7c3aed;
+  color: white;
+}
+
+.btn-yellow {
+  background: gold;
+  color: black;
+}
+
+.btn-green {
+  background: #16a34a;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+}
+
+.btn-gray {
+  background: #374151;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+}
