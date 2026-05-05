@@ -24,10 +24,7 @@ type Match = {
 export default function Home() {
   const [matches, setMatches] = useState<Match[]>([]);
 
-  useEffect(() => {
-    fetchMatches();
-  }, []);
-
+  // 📥 BUSCA INICIAL
   async function fetchMatches() {
     const { data, error } = await supabase
       .from("matches")
@@ -53,6 +50,34 @@ export default function Home() {
     if (data) setMatches(data as any);
   }
 
+  // 🔥 1. CARREGA AO ABRIR
+  useEffect(() => {
+    fetchMatches();
+  }, []);
+
+  // 🔥 2. REALTIME (ATUALIZA SEM F5)
+  useEffect(() => {
+    const channel = supabase
+      .channel("matches-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "matches",
+        },
+        () => {
+          fetchMatches(); // 🔥 atualiza automático
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  // 🔎 FILTROS
   const quartasLeft = matches.filter(
     (m) => m.phase === "quartas" && m.side === "left"
   );
@@ -71,7 +96,7 @@ export default function Home() {
 
   const finalMatch = matches.find((m) => m.phase === "final");
 
-  // PEGAR CAMPEÃO
+  // 🏆 CAMPEÃO
   let champion: Team | null = null;
 
   if (finalMatch) {
@@ -84,6 +109,7 @@ export default function Home() {
       <h1 className="title">MUNDIAL DE CLUBES</h1>
 
       <div className="bracket-full">
+
         {/* QUARTAS ESQUERDA */}
         <div className="col">
           <h2 className="round-title">QUARTAS</h2>
@@ -104,7 +130,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* FINAL CENTRAL */}
+        {/* FINAL */}
         <div className="col final-col">
           <h2 className="round-title">FINAL</h2>
 
@@ -114,7 +140,7 @@ export default function Home() {
 
               {champion && (
                 <div className="champion-box">
-                  <p className="champion-title"> CAMPEÃO</p>
+                  <p className="champion-title">🏆 CAMPEÃO</p>
 
                   <div className="champion-team">
                     <img src={champion.logo_url} alt={champion.name} />
@@ -150,11 +176,13 @@ export default function Home() {
             ))}
           </div>
         </div>
+
       </div>
     </main>
   );
 }
 
+// 🧩 COMPONENTE JOGO
 function MatchBox({
   match,
   highlight = false,
@@ -170,6 +198,7 @@ function MatchBox({
   );
 }
 
+// 🧩 TIME
 function TeamRow({ team, score }: { team: Team; score: number }) {
   return (
     <div className="team-row">

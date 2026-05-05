@@ -199,6 +199,50 @@ export default function AdminHome() {
 
     alert("Final gerada com sucesso!");
   }
+  async function simularFase(phase: string) {
+  const { data: matches, error } = await supabase
+    .from("matches")
+    .select("*")
+    .eq("phase", phase);
+
+  if (error) {
+    alert("Erro ao buscar jogos: " + error.message);
+    return;
+  }
+
+  if (!matches || matches.length === 0) {
+    alert("Nenhum jogo nessa fase.");
+    return;
+  }
+
+  const updates = matches.map((match) => {
+    let score1 = Math.floor(Math.random() * 6);
+    let score2 = Math.floor(Math.random() * 6);
+
+    // ❗ SEM EMPATE
+    if (score1 === score2) {
+      Math.random() < 0.5 ? score1++ : score2++;
+    }
+
+    return {
+      id: match.id,
+      score1,
+      score2,
+    };
+  });
+
+  for (const update of updates) {
+    await supabase
+      .from("matches")
+      .update({
+        score1: update.score1,
+        score2: update.score2,
+      })
+      .eq("id", update.id);
+  }
+
+  alert(`Fase ${phase} simulada com sucesso!`);
+}
 
   return (
     <main className="admin-page">
@@ -208,26 +252,53 @@ export default function AdminHome() {
       </div>
 
       <div className="admin-card">
-        <button onClick={gerarQuartas} className="admin-btn btn-blue">
-          Gerar Quartas (Sorteio)
-        </button>
 
-        <button onClick={gerarSemifinais} className="admin-btn btn-purple">
-          Gerar Semifinais
-        </button>
+  {/* 🟦 QUARTAS */}
+  <button onClick={gerarQuartas} className="admin-btn btn-blue">
+    Gerar Quartas (Sorteio)
+  </button>
 
-        <button onClick={gerarFinal} className="admin-btn btn-yellow">
-          Gerar Final
-        </button>
+  <button
+    onClick={() => simularFase("quartas")}
+    className="admin-btn btn-blue"
+  >
+    🎲 Simular Quartas
+  </button>
 
-        <a href="/admin/teams" className="admin-btn btn-green">
-          CRUD Times
-        </a>
+  {/* 🟪 SEMIFINAL */}
+  <button onClick={gerarSemifinais} className="admin-btn btn-purple">
+    Gerar Semifinais
+  </button>
 
-        <a href="/admin/matches" className="admin-btn btn-gray">
-          CRUD Jogos / Resultados
-        </a>
-      </div>
+  <button
+    onClick={() => simularFase("semi")}
+    className="admin-btn btn-purple"
+  >
+    🎲 Simular Semifinal
+  </button>
+
+  {/* 🟨 FINAL */}
+  <button onClick={gerarFinal} className="admin-btn btn-yellow">
+    Gerar Final
+  </button>
+
+  <button
+    onClick={() => simularFase("final")}
+    className="admin-btn btn-yellow"
+  >
+    🎲 Simular Final
+  </button>
+
+  {/* OUTROS */}
+  <a href="/admin/teams" className="admin-btn btn-green">
+    CRUD Times
+  </a>
+
+  <a href="/admin/matches" className="admin-btn btn-gray">
+    CRUD Jogos / Resultados
+  </a>
+
+</div>
     </main>
   );
 }
