@@ -24,7 +24,6 @@ type Match = {
 export default function Home() {
   const [matches, setMatches] = useState<Match[]>([]);
 
-  // 📥 BUSCA INICIAL
   async function fetchMatches() {
     const { data, error } = await supabase
       .from("matches")
@@ -50,12 +49,10 @@ export default function Home() {
     if (data) setMatches(data as any);
   }
 
-  // 🔥 1. CARREGA AO ABRIR
   useEffect(() => {
     fetchMatches();
   }, []);
 
-  // 🔥 2. REALTIME (ATUALIZA SEM F5)
   useEffect(() => {
     const channel = supabase
       .channel("matches-realtime")
@@ -67,7 +64,7 @@ export default function Home() {
           table: "matches",
         },
         () => {
-          fetchMatches(); // 🔥 atualiza automático
+          fetchMatches();
         }
       )
       .subscribe();
@@ -77,7 +74,6 @@ export default function Home() {
     };
   }, []);
 
-  // 🔎 FILTROS
   const quartasLeft = matches.filter(
     (m) => m.phase === "quartas" && m.side === "left"
   );
@@ -96,7 +92,6 @@ export default function Home() {
 
   const finalMatch = matches.find((m) => m.phase === "final");
 
-  // 🏆 CAMPEÃO
   let champion: Team | null = null;
 
   if (finalMatch) {
@@ -106,13 +101,23 @@ export default function Home() {
 
   return (
     <main className="bracket-container">
-      <h1 className="title">MUNDIAL DE CLUBES</h1>
+      <div className="background-overlay"></div>
+
+      <section className="home-hero">
+        <h1 className="title">MUNDIAL DE CLUBES</h1>
+
+        <div className="hero-image">
+          <img
+            src="/images/mundial-trofeu.png"
+            alt="Troféu Mundial de Clubes"
+          />
+        </div>
+      </section>
 
       <div className="bracket-full">
-
-        {/* QUARTAS ESQUERDA */}
         <div className="col">
           <h2 className="round-title">QUARTAS</h2>
+
           <div className="side">
             {quartasLeft.map((match) => (
               <MatchBox key={match.id} match={match} />
@@ -120,9 +125,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* SEMI ESQUERDA */}
         <div className="col semi-col">
           <h2 className="round-title">SEMI</h2>
+
           <div className="semi">
             {semiLeft.map((match) => (
               <MatchBox key={match.id} match={match} />
@@ -130,7 +135,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* FINAL */}
         <div className="col final-col">
           <h2 className="round-title">FINAL</h2>
 
@@ -157,9 +161,9 @@ export default function Home() {
           )}
         </div>
 
-        {/* SEMI DIREITA */}
         <div className="col semi-col">
           <h2 className="round-title">SEMI</h2>
+
           <div className="semi">
             {semiRight.map((match) => (
               <MatchBox key={match.id} match={match} />
@@ -167,22 +171,20 @@ export default function Home() {
           </div>
         </div>
 
-        {/* QUARTAS DIREITA */}
         <div className="col">
           <h2 className="round-title">QUARTAS</h2>
+
           <div className="side">
             {quartasRight.map((match) => (
               <MatchBox key={match.id} match={match} />
             ))}
           </div>
         </div>
-
       </div>
     </main>
   );
 }
 
-// 🧩 COMPONENTE JOGO
 function MatchBox({
   match,
   highlight = false,
@@ -198,7 +200,6 @@ function MatchBox({
   );
 }
 
-// 🧩 TIME
 function TeamRow({ team, score }: { team: Team; score: number }) {
   return (
     <div className="team-row">
@@ -206,6 +207,7 @@ function TeamRow({ team, score }: { team: Team; score: number }) {
         <img src={team.logo_url} alt={team.name} />
         <span>{team.name}</span>
       </div>
+
       <div className="score">{score}</div>
     </div>
   );
